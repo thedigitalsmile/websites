@@ -68,6 +68,12 @@ try {
     await new Promise(r => setTimeout(r, 400));
   }
 
+  // If label includes "menu-open", click the hamburger first
+  if (label && label.includes('menu-open')) {
+    await page.click('#mobile-menu-toggle');
+    await new Promise(r => setTimeout(r, 300));
+  }
+
   await page.screenshot({
     path: outPath,
     fullPage: (viewportOnly || anchor) ? false : fullPage,
