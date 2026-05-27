@@ -8,7 +8,7 @@
     "shot": "node screenshot.mjs http://localhost:3000",
     "shot:mobile": "node screenshot.mjs http://localhost:3000 mobile mobile"
   },
-  "dependencies": {
+  "devDependencies": {
     "puppeteer": "^23.11.1"
   }
 }
