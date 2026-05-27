@@ -52,3 +52,11 @@
 - Do not stop after one screenshot pass
 - Do not use `transition-all`
 - Do not use default Tailwind blue/indigo as primary color
+
+## Git Workflow — Push Requires Explicit Approval
+- **Never push to GitHub without explicit user approval.** Auto-commit is allowed when the user requests a change; `git push` is not.
+- The user must say "push", "deploy", "ship it", or similar before any `git push` command runs.
+- "Yes" to a generic offer to push is not standing approval — each push needs its own explicit approval.
+- Apply this rule to all remotes (origin, upstream, fork, etc.) and all branches.
+- When a change is committed but not yet pushed, surface that state clearly: tell the user "commit landed locally — ready to push when you say so."
+- If unsure whether a request includes push approval, ask before pushing.

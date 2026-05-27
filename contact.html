@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — The Digital Smile</title>
+<meta name="description" content="Book your AI visibility audit. Email hello@thedigitalsmile.com or use the form. We respond to every serious inquiry within one business day." />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: { DEFAULT: '#0F172A', 800: '#0B1120', 700: '#111C2F', 600: '#1A2235' },
+          bone: '#F9FAFB',
+          mist: '#E5E7EB',
+          cyan: { DEFAULT: '#22D3EE', dim: '#0BB4CC' },
+          teal: { DEFAULT: '#0E7490', dim: '#0A5B72' },
+          gold: '#FACC15',
+        },
+        fontFamily: {
+          display: ['Satoshi', 'ui-sans-serif', 'system-ui'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular'],
+        },
+      }
+    }
+  }
+</script>
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="surface-base">
+
+<!-- ============== NAV ============== -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-charcoal/80 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 group">
+      <img src="Brand Assets/Logo 180px.png" alt="The Digital Smile" class="logo-mark w-8 h-8 rounded-lg" />
+      <span class="font-display font-bold tracking-tight text-bone text-[15px]">
+        The <span class="text-cyan">Digital</span> Smile
+      </span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-bone/70">
+      <a href="index.html" class="hover:text-cyan transition-colors">Home</a>
+      <a href="about.html" class="hover:text-cyan transition-colors">About</a>
+      <a href="pricing.html" class="hover:text-cyan transition-colors">Pricing</a>
+      <a href="contact.html" class="text-cyan">Contact</a>
+    </nav>
+    <a href="#form" class="btn-primary px-4 py-2 rounded-lg text-sm">Book AI audit</a>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 grid-bg"></div>
+  <div class="absolute inset-0 hero-glow"></div>
+  <div class="absolute inset-0 grain"></div>
+
+  <div class="relative max-w-4xl mx-auto px-6 lg:px-10 pt-20 pb-16 lg:pt-28 lg:pb-20 text-center">
+    <p class="eyebrow reveal reveal-1">Contact · Let's talk</p>
+    <h1 class="reveal reveal-2 h-display text-bone mt-6 text-[40px] sm:text-[56px] lg:text-[72px]">
+      Tell us about<br/>
+      your <span class="text-cyan">practice.</span>
+    </h1>
+    <p class="reveal reveal-3 mt-7 text-bone/70 text-lg lg:text-xl leading-[1.65] max-w-2xl mx-auto">
+      We respond to every serious inquiry within one business day. No automated nurture sequences. No sales squeeze.
+    </p>
+  </div>
+  <div class="hairline"></div>
+</section>
+
+<!-- ============== FORM + SIDEBAR ============== -->
+<section class="relative py-20 lg:py-28">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+      <!-- Form -->
+      <form id="form" class="lg:col-span-7 surface-2 lift rounded-2xl p-8 lg:p-10" onsubmit="return handleSubmit(event)">
+        <p class="eyebrow">Audit request</p>
+        <h2 class="heading-2 mt-4 text-bone text-[26px] lg:text-[32px]">Start with a 14‑day audit.</h2>
+        <p class="mt-3 text-bone/60 text-[14px] leading-[1.65]">
+          Fill in the basics. We'll respond within one business day with a calendar link for a 30‑minute scoping call.
+        </p>
+
+        <div class="mt-8 space-y-5">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">Your name</label>
+              <input id="name" name="name" type="text" required class="input-field" placeholder="Dr. M. Reyes" />
+            </div>
+            <div>
+              <label for="email" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">Work email</label>
+              <input id="email" name="email" type="email" required class="input-field" placeholder="dr@yourpractice.com" />
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="practice" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">Practice name</label>
+              <input id="practice" name="practice" type="text" required class="input-field" placeholder="Hollow Creek Dental Studio" />
+            </div>
+            <div>
+              <label for="role" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">Your role</label>
+              <select id="role" name="role" required class="input-field">
+                <option value="">Select…</option>
+                <option>Owner / Founding Doctor</option>
+                <option>Managing Partner</option>
+                <option>DSO Marketing Director</option>
+                <option>Practice Manager</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-3">Primary treatment focus</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="implants" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Implants</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="full-arch" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Full‑arch</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="invisalign" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Invisalign</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="cosmetic" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Cosmetic</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="veneers" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Veneers</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="treatments" value="sedation" class="peer sr-only" />
+                <span class="inline-flex px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider border border-white/10 text-bone/65 hover:border-cyan/40 peer-checked:bg-cyan/10 peer-checked:border-cyan/50 peer-checked:text-cyan transition-colors">Sedation</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label for="spend" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">Monthly marketing spend</label>
+            <select id="spend" name="spend" required class="input-field">
+              <option value="">Select…</option>
+              <option>Under $2k / month</option>
+              <option>$2k – $5k / month</option>
+              <option>$5k – $10k / month</option>
+              <option>$10k – $25k / month</option>
+              <option>$25k+ / month</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block font-mono text-[11px] tracking-[0.18em] text-bone/50 uppercase mb-2">What's the situation? <span class="normal-case tracking-normal text-bone/35">(optional)</span></label>
+            <textarea id="message" name="message" rows="4" class="input-field" placeholder="The 1–2 sentence version of where you are now and what you'd like to be true in 6 months."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary mt-8 w-full sm:w-auto px-7 py-4 rounded-xl text-[15px] inline-flex items-center justify-center gap-2">
+          Send audit request
+          <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <p class="mt-4 font-mono text-[11px] text-bone/35 tracking-[0.18em] uppercase">We respond within one business day. No automated nurture.</p>
+
+        <!-- Success state — toggled by JS -->
+        <div id="form-success" class="hidden mt-6 p-5 rounded-xl bg-cyan/[0.08] border border-cyan/30">
+          <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Received</p>
+          <p class="mt-2 text-bone text-[15px]">Thanks. Your audit request is in. We'll reply from <span class="text-cyan">hello@thedigitalsmile.com</span> within one business day with a scoping‑call calendar link.</p>
+        </div>
+      </form>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-5 space-y-5">
+        <article class="surface-2 lift-card rounded-2xl p-7">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">Direct line</p>
+          <h3 class="mt-4 text-bone text-xl font-display font-bold tracking-tight">Email the team</h3>
+          <p class="mt-3 text-bone/60 text-[14px] leading-[1.6]">
+            Prefer plain email? Skip the form.
+          </p>
+          <a href="mailto:hello@thedigitalsmile.com" class="mt-5 inline-flex items-center gap-2 text-cyan font-medium text-[15px] hover:underline">
+            hello@thedigitalsmile.com
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </article>
+
+        <article class="surface-2 lift-card rounded-2xl p-7">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">Book directly</p>
+          <h3 class="mt-4 text-bone text-xl font-display font-bold tracking-tight">30‑minute scoping call</h3>
+          <p class="mt-3 text-bone/60 text-[14px] leading-[1.6]">
+            Skip the back‑and‑forth. Pick a time on the calendar — we'll come prepared with a live look at your current AI visibility.
+          </p>
+          <a href="https://cal.com/thedigitalsmile" target="_blank" rel="noopener" class="btn-ghost mt-6 px-5 py-3 rounded-xl text-[14px] inline-flex items-center justify-center gap-2 w-full">
+            Open calendar
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <p class="mt-3 font-mono text-[10px] tracking-[0.18em] text-bone/30 uppercase">Calendar placeholder · swap with your Cal.com / Calendly URL</p>
+        </article>
+
+        <article class="surface-2 lift-card rounded-2xl p-7">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">What happens next</p>
+          <ol class="mt-5 space-y-3 text-[14px] text-bone/70">
+            <li class="flex gap-3">
+              <span class="font-mono text-[12px] text-cyan shrink-0 mt-0.5">01</span>
+              <span>We reply within one business day with a calendar link.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-mono text-[12px] text-cyan shrink-0 mt-0.5">02</span>
+              <span>30‑minute scoping call: market, treatments, current spend, ambitions.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-mono text-[12px] text-cyan shrink-0 mt-0.5">03</span>
+              <span>Audit kickoff if it's a fit — full deliverable in 14 days.</span>
+            </li>
+          </ol>
+        </article>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FINAL CTA ============== -->
+<section class="relative py-20 lg:py-28 overflow-hidden border-t border-white/5">
+  <div class="absolute inset-0 hero-glow opacity-50"></div>
+  <div class="relative max-w-3xl mx-auto px-6 lg:px-10 text-center">
+    <p class="font-mono text-[11px] tracking-[0.22em] uppercase text-bone/40">Not ready yet?</p>
+    <h2 class="heading-2 mt-4 text-bone text-[28px] lg:text-[36px]">
+      Read more about <a href="about.html" class="text-cyan hover:underline">how we operate</a><br/>
+      or <a href="pricing.html" class="text-cyan hover:underline">see what's included</a> at each tier.
+    </h2>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="relative border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-12">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <div class="flex items-center gap-3">
+        <img src="Brand Assets/Logo 180px.png" alt="The Digital Smile" class="logo-mark w-7 h-7 rounded-lg" />
+        <div>
+          <p class="font-display font-bold tracking-tight text-bone text-[14px]">The Digital Smile</p>
+          <p class="font-mono text-[11px] text-bone/40 tracking-wider mt-0.5">AI SEO for serious dentists</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-2 text-[13px] text-bone/55">
+        <a href="index.html" class="hover:text-cyan transition-colors">Home</a>
+        <a href="about.html" class="hover:text-cyan transition-colors">About</a>
+        <a href="pricing.html" class="hover:text-cyan transition-colors">Pricing</a>
+        <a href="contact.html" class="hover:text-cyan transition-colors">Contact</a>
+        <a href="mailto:hello@thedigitalsmile.com" class="hover:text-cyan transition-colors">hello@thedigitalsmile.com</a>
+      </div>
+    </div>
+    <div class="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <p class="font-mono text-[11px] text-bone/35 tracking-wider">© 2026 The Digital Smile · All rights reserved</p>
+      <p class="font-mono text-[11px] text-bone/35 tracking-wider">Built for dentists who measure success in cases, not clicks.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Form is currently a UI shell — no backend wired yet.
+  // Replace with Formspree, HubSpot, Resend, or your CRM endpoint.
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const success = document.getElementById('form-success');
+    success.classList.remove('hidden');
+    form.querySelectorAll('input, select, textarea, button').forEach(el => {
+      if (el.type !== 'submit') el.disabled = true;
+    });
+    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+</script>
+
+</body>
+</html>
