@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Digital Smile — AI SEO for serious dentists</title>
+<meta name="description" content="AI-first patient acquisition systems for dental practices that want more implants, Invisalign, and cosmetic cases. Measured in production, not vanity metrics." />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<!-- Three.js for the custom dental 3D scene -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: { DEFAULT: '#0F172A', 800: '#0B1120', 700: '#111C2F', 600: '#1A2235' },
+          bone: '#F9FAFB',
+          mist: '#E5E7EB',
+          cyan: { DEFAULT: '#22D3EE', dim: '#0BB4CC' },
+          teal: { DEFAULT: '#0E7490', dim: '#0A5B72' },
+          gold: '#FACC15',
+        },
+        fontFamily: {
+          display: ['Satoshi', 'ui-sans-serif', 'system-ui'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  :root {
+    --grid: rgba(34, 211, 238, 0.06);
+    --grid-strong: rgba(34, 211, 238, 0.10);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0F172A;
+    color: #F9FAFB;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display headings — tight tracking per brand manual */
+  .h-display {
+    font-family: 'Satoshi', system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+  .heading-2 {
+    font-family: 'Satoshi', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    line-height: 1.12;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #22D3EE;
+  }
+
+  /* Grid backdrop — subtle node/grid system per brand manual */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+  }
+  .grid-bg-strong {
+    background-image:
+      linear-gradient(to right, var(--grid-strong) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-strong) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Layered radial atmosphere for hero */
+  .hero-glow {
+    background:
+      radial-gradient(60% 50% at 18% 20%, rgba(34, 211, 238, 0.14) 0%, transparent 60%),
+      radial-gradient(50% 40% at 82% 70%, rgba(14, 116, 144, 0.18) 0%, transparent 60%),
+      radial-gradient(40% 30% at 50% 100%, rgba(250, 204, 21, 0.04) 0%, transparent 60%);
+  }
+
+  /* Grain overlay for depth */
+  .grain::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+  }
+
+  /* Layered tinted shadow — no flat shadow-md */
+  .lift {
+    box-shadow:
+      0 1px 0 rgba(34, 211, 238, 0.06) inset,
+      0 30px 60px -30px rgba(34, 211, 238, 0.10),
+      0 18px 36px -18px rgba(0, 0, 0, 0.55);
+  }
+  .lift-card {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 10px 30px -12px rgba(0, 0, 0, 0.6),
+      0 4px 10px -4px rgba(34, 211, 238, 0.10);
+  }
+
+  /* Surfaces — layered z-plane system */
+  .surface-base { background: #0F172A; }
+  .surface-1 { background: linear-gradient(180deg, #111C2F 0%, #0F172A 100%); }
+  .surface-2 {
+    background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(6px);
+  }
+
+  /* Buttons — spring easing, transform/opacity only */
+  .btn-primary {
+    background: #22D3EE;
+    color: #0F172A;
+    font-weight: 600;
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 220ms ease,
+                box-shadow 220ms ease;
+    box-shadow:
+      0 0 0 1px rgba(34, 211, 238, 0.4) inset,
+      0 14px 36px -12px rgba(34, 211, 238, 0.45);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.6) inset, 0 18px 44px -10px rgba(34, 211, 238, 0.6); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:focus-visible { outline: 2px solid #FACC15; outline-offset: 3px; }
+
+  .btn-ghost {
+    background: transparent;
+    color: #F9FAFB;
+    border: 1px solid rgba(249, 250, 251, 0.18);
+    font-weight: 500;
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 220ms ease,
+                background-color 220ms ease;
+  }
+  .btn-ghost:hover { border-color: rgba(34, 211, 238, 0.6); background-color: rgba(34, 211, 238, 0.06); transform: translateY(-1px); }
+  .btn-ghost:focus-visible { outline: 2px solid #FACC15; outline-offset: 3px; }
+
+  /* Cyan accent underline */
+  .accent-bar { position: relative; }
+  .accent-bar::after {
+    content: ""; display: block; height: 2px; width: 32px; margin-top: 14px;
+    background: linear-gradient(90deg, #22D3EE 0%, transparent 100%);
+  }
+
+  /* Numbers / metrics */
+  .stat-num {
+    font-family: 'Satoshi', system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+  }
+
+  /* Subtle entrance reveal */
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { animation: reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .reveal-1 { animation-delay: 80ms; }
+  .reveal-2 { animation-delay: 180ms; }
+  .reveal-3 { animation-delay: 280ms; }
+  .reveal-4 { animation-delay: 380ms; }
+  .reveal-5 { animation-delay: 480ms; }
+
+  /* Process node line */
+  .node-line {
+    background-image: linear-gradient(90deg, rgba(34, 211, 238, 0.5) 0%, rgba(34, 211, 238, 0.1) 100%);
+  }
+
+  /* Logo treatment — desaturate the cartoon mark so it reads as a controlled badge until you replace it */
+  .logo-mark {
+    filter: grayscale(0.35) brightness(1.05);
+    transition: filter 220ms ease, transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .logo-mark:hover { filter: grayscale(0) brightness(1.1); transform: translateY(-1px); }
+
+  /* Section dividers — slightly stronger, with a center node */
+  .hairline {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.35) 50%, transparent 100%);
+  }
+  .hairline::after {
+    content: "";
+    position: absolute;
+    top: -2px; left: 50%;
+    transform: translateX(-50%);
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #22D3EE;
+    box-shadow: 0 0 14px 3px rgba(34, 211, 238, 0.45);
+  }
+
+  /* Mockup live dot pulse */
+  @keyframes softPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+  .pulse-dot { animation: softPulse 2.6s ease-in-out infinite; }
+
+  /* 3D scene container */
+  .scene-wrap {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background:
+      radial-gradient(70% 70% at 50% 35%, rgba(34, 211, 238, 0.18) 0%, rgba(15, 23, 42, 0) 70%),
+      linear-gradient(180deg, #111C2F 0%, #0B1120 100%);
+    border: 1px solid rgba(34, 211, 238, 0.18);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.05) inset,
+      0 30px 80px -30px rgba(34, 211, 238, 0.20),
+      0 18px 36px -18px rgba(0, 0, 0, 0.55);
+    min-height: 520px;
+  }
+  .scene-wrap spline-viewer {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: transparent !important;
+  }
+  /* Cover the Spline "Built with Spline" badge — gradient block bottom-right.
+     NOTE: Properly removing this badge requires a Spline paid plan; the gradient
+     here is just a visual mask. Replace with a TDS brand mark in production. */
+  .scene-mask {
+    position: absolute;
+    right: 0; bottom: 0;
+    width: 220px; height: 88px;
+    background:
+      linear-gradient(135deg, transparent 0%, rgba(11, 17, 32, 0.85) 40%, #0B1120 75%);
+    pointer-events: none;
+    z-index: 3;
+  }
+  /* Optional: replace Spline branding with your own bottom-right mark */
+  .scene-brand {
+    position: absolute;
+    right: 14px; bottom: 14px;
+    z-index: 4;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(249, 250, 251, 0.35);
+    pointer-events: none;
+  }
+  /* SVG spotlight (Aceternity-style) */
+  @keyframes spotlightIn {
+    0%   { opacity: 0; transform: translate(-72%, -62%) rotate(-15deg); }
+    100% { opacity: 1; transform: translate(-50%, -40%) rotate(-15deg); }
+  }
+  .spotlight-svg {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translate(-50%, -40%) rotate(-15deg);
+    width: 110%;
+    height: 130%;
+    pointer-events: none;
+    opacity: 0;
+    animation: spotlightIn 1600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+    mix-blend-mode: screen;
+  }
+
+  /* Loader for 3D scene while it warms up */
+  .scene-loader {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px;
+    color: rgba(249, 250, 251, 0.4);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    background: linear-gradient(180deg, #111C2F 0%, #0B1120 100%);
+    z-index: 2;
+    transition: opacity 600ms ease;
+  }
+  .scene-loader .ring {
+    width: 32px; height: 32px;
+    border: 2px solid rgba(34, 211, 238, 0.15);
+    border-top-color: #22D3EE;
+    border-radius: 50%;
+    animation: spin 1.1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Floating hint chip near 3D scene */
+  .scene-chip {
+    position: absolute;
+    z-index: 3;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #22D3EE;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Ticker scroll — vertical query rotation */
+  @keyframes tickerScroll {
+    0%,   18% { transform: translateY(0); }
+    20%,  38% { transform: translateY(-26px); }
+    40%,  58% { transform: translateY(-52px); }
+    60%,  78% { transform: translateY(-78px); }
+    80%, 100% { transform: translateY(-104px); }
+  }
+  .ticker { animation: tickerScroll 11s cubic-bezier(0.6, 0, 0.4, 1) infinite; }
+
+  /* FAQ details */
+  details summary { list-style: none; cursor: pointer; }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(45deg); }
+  .chev { transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+</style>
+</head>
+<body class="surface-base">
+
+<!-- ============== NAV ============== -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-charcoal/80 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3 group">
+      <img src="Brand Assets/Logo 180px.png" alt="The Digital Smile" class="logo-mark w-8 h-8 rounded-lg" />
+      <span class="font-display font-bold tracking-tight text-bone text-[15px]">
+        The <span class="text-cyan">Digital</span> Smile
+      </span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8 text-sm text-bone/70">
+      <a href="#problem" class="hover:text-cyan transition-colors">Problem</a>
+      <a href="#solution" class="hover:text-cyan transition-colors">Solution</a>
+      <a href="#proof" class="hover:text-cyan transition-colors">Proof</a>
+      <a href="#process" class="hover:text-cyan transition-colors">Process</a>
+      <a href="#faq" class="hover:text-cyan transition-colors">FAQ</a>
+    </nav>
+
+    <a href="#audit" class="btn-primary px-4 py-2 rounded-lg text-sm">Book AI audit</a>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 grid-bg"></div>
+  <div class="absolute inset-0 hero-glow"></div>
+  <div class="absolute inset-0 grain"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-28 lg:pt-28 lg:pb-36">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+
+      <div class="lg:col-span-7">
+        <div class="reveal reveal-1 inline-flex items-center gap-2 px-3 py-1.5 rounded-full surface-2 text-[12px] font-mono text-bone/80">
+          <span class="relative flex w-1.5 h-1.5">
+            <span class="absolute inline-flex h-full w-full rounded-full bg-cyan opacity-60 animate-ping"></span>
+            <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-cyan shadow-[0_0_10px_2px_rgba(34,211,238,0.6)]"></span>
+          </span>
+          AI SEO ENGINE · ChatGPT · Gemini · Perplexity
+        </div>
+
+        <h1 class="reveal reveal-2 h-display text-bone mt-7 text-[44px] sm:text-[56px] lg:text-[76px]">
+          AI SEO for<br />
+          <span class="text-cyan">serious dentists.</span>
+        </h1>
+
+        <p class="reveal reveal-3 mt-7 text-bone/70 text-lg lg:text-xl leading-[1.65] max-w-[58ch]">
+          We build AI‑driven patient acquisition systems for established practices that want more implants, Invisalign, and cosmetic cases. Measured in production, not vanity metrics.
+        </p>
+
+        <div class="reveal reveal-4 mt-10 flex flex-col sm:flex-row gap-3">
+          <a href="#audit" class="btn-primary px-6 py-3.5 rounded-xl text-[15px] inline-flex items-center justify-center gap-2">
+            Book AI visibility audit
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#proof" class="btn-ghost px-6 py-3.5 rounded-xl text-[15px] inline-flex items-center justify-center">
+            See case outcomes
+          </a>
+        </div>
+
+        <div class="reveal reveal-5 mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-[12px] font-mono uppercase tracking-[0.18em] text-bone/40">
+          <span>Transparent reporting</span>
+          <span class="w-1 h-1 rounded-full bg-bone/20"></span>
+          <span>Operator‑level metrics</span>
+          <span class="w-1 h-1 rounded-full bg-bone/20"></span>
+          <span>No retainers in the dark</span>
+        </div>
+
+        <!-- Live AI scan ticker -->
+        <div class="reveal reveal-5 mt-10 relative max-w-md overflow-hidden rounded-lg surface-2 px-4 py-3">
+          <div class="flex items-center gap-3 text-[12px] font-mono">
+            <span class="w-2 h-2 rounded-full bg-cyan pulse-dot shrink-0"></span>
+            <span class="text-bone/40 uppercase tracking-[0.18em] shrink-0">Live scan</span>
+            <div class="flex-1 overflow-hidden relative h-5">
+              <div class="ticker absolute inset-0 flex flex-col gap-1.5">
+                <span class="text-bone/85 truncate">"best implant dentist near me"</span>
+                <span class="text-bone/85 truncate">"how much do veneers cost in NYC"</span>
+                <span class="text-bone/85 truncate">"Invisalign vs traditional braces"</span>
+                <span class="text-bone/85 truncate">"all‑on‑4 dentist with financing"</span>
+                <span class="text-bone/85 truncate">"best implant dentist near me"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero 3D scene -->
+      <div class="lg:col-span-5 reveal reveal-3">
+        <div class="scene-wrap">
+          <!-- Loader (shown until Spline finishes) -->
+          <div class="scene-loader">
+            <div class="ring"></div>
+            <span>Loading scene…</span>
+          </div>
+
+          <!-- Spotlight overlay (SVG, Aceternity-style) -->
+          <svg class="spotlight-svg" viewBox="0 0 3787 2842" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <g filter="url(#spotlight-filter)">
+              <ellipse
+                cx="1924.71" cy="273.501" rx="1924.71" ry="273.501"
+                transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
+                fill="#22D3EE" fill-opacity="0.18"/>
+            </g>
+            <defs>
+              <filter id="spotlight-filter" x="0.86" y="0.84" width="3785.16" height="2840.26" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feGaussianBlur stdDeviation="151"/>
+              </filter>
+            </defs>
+          </svg>
+
+          <!-- Floating hint chip -->
+          <div class="scene-chip" style="top: 16px; left: 16px;">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan shadow-[0_0_8px_rgba(34,211,238,0.7)]"></span>
+            Drag to interact
+          </div>
+
+          <!-- Custom Three.js dental scene -->
+          <canvas id="tooth-canvas" style="position: relative; z-index: 1; width: 100%; height: 100%; display: block;"></canvas>
+
+          <div class="scene-brand">The Digital Smile · 3D</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hairline"></div>
+</section>
+
+<!-- ============== TRUST STRIP ============== -->
+<section class="relative">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-bone/40">
+        Built for practices doing $1.5M+ in production
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-10 gap-y-4 text-bone/40 font-mono text-[12px]">
+        <span class="tracking-wide">Implants</span>
+        <span class="tracking-wide">Invisalign</span>
+        <span class="tracking-wide">Cosmetic</span>
+        <span class="tracking-wide">Full‑arch</span>
+      </div>
+    </div>
+  </div>
+  <div class="hairline"></div>
+</section>
+
+<!-- ============== AI IN ACTION ============== -->
+<section id="ai-in-action" class="relative py-24 lg:py-32 overflow-hidden">
+  <div class="absolute inset-0 grid-bg opacity-50"></div>
+  <div class="absolute top-1/3 right-0 w-[600px] h-[600px] bg-cyan/5 blur-3xl rounded-full"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+
+      <div class="lg:col-span-5">
+        <p class="eyebrow">AI in action</p>
+        <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+          What patients<br/>actually <span class="text-cyan">see.</span>
+        </h2>
+        <p class="mt-6 text-bone/65 text-lg leading-[1.7]">
+          When a high‑intent patient asks ChatGPT about implants, Invisalign, or cosmetic work, only a few practices get cited. We build the entity authority and answer scaffolding the models need to recommend you — by name.
+        </p>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-bone/70 text-[15px]">Named in <span class="text-bone font-medium">first‑position</span> AI citations</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-bone/70 text-[15px]">Treatment‑specific recommendations, not generic listings</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-bone/70 text-[15px]">Indexed across ChatGPT, Gemini & Perplexity simultaneously</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ChatGPT mockup -->
+      <div class="lg:col-span-7">
+        <div class="relative">
+          <div class="absolute -inset-6 bg-cyan/10 blur-3xl rounded-full"></div>
+          <div class="relative surface-2 lift rounded-2xl p-5 lg:p-7">
+            <div class="flex items-center gap-2 pb-4 border-b border-white/5">
+              <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+              </div>
+              <div class="flex-1 ml-3 px-3 py-1 rounded-md bg-white/[0.03] border border-white/5 font-mono text-[11px] text-bone/50">
+                chat.openai.com
+              </div>
+            </div>
+
+            <div class="pt-5">
+              <p class="font-mono text-[11px] tracking-[0.18em] uppercase text-bone/40 mb-3">User</p>
+              <p class="text-bone/90 text-[15px] lg:text-base leading-relaxed">
+                "Best dentist for full‑arch implants in <span class="text-cyan">Austin</span>?"
+              </p>
+            </div>
+
+            <div class="mt-6 pt-5 border-t border-white/5">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="w-5 h-5 rounded-md bg-cyan/15 flex items-center justify-center">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan"></span>
+                </span>
+                <p class="font-mono text-[11px] tracking-[0.18em] uppercase text-cyan">ChatGPT</p>
+              </div>
+              <p class="text-bone/85 text-[14px] leading-[1.7]">
+                Based on patient outcomes and AI‑indexed case data, several practices stand out for full‑arch implant treatment in Austin:
+              </p>
+              <div class="mt-4 space-y-2.5">
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-cyan/[0.08] border border-cyan/20">
+                  <span class="mt-0.5 text-cyan font-mono text-[11px]">01</span>
+                  <div>
+                    <p class="text-bone font-medium text-[14px]">Hollow Creek Dental Studio</p>
+                    <p class="text-bone/55 text-[12px] mt-0.5">Recognized for full‑arch & implant restoration.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                  <span class="mt-0.5 text-bone/40 font-mono text-[11px]">02</span>
+                  <div>
+                    <p class="text-bone/70 text-[14px]">Lakeside Smile Center</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                  <span class="mt-0.5 text-bone/40 font-mono text-[11px]">03</span>
+                  <div>
+                    <p class="text-bone/70 text-[14px]">Riverbend Dental Arts</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden lg:flex absolute -right-6 top-1/3 items-center gap-3">
+            <div class="h-px w-12 bg-cyan/40"></div>
+            <div class="surface-2 rounded-lg px-3 py-2 text-[11px] font-mono text-cyan whitespace-nowrap">
+              ← Your practice, ranked
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== PROBLEM ============== -->
+<section id="problem" class="relative py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl">
+      <p class="eyebrow">01 / The problem</p>
+      <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+        Most dental SEO retainers <span class="text-bone/40">weren't built</span> for the AI era.
+      </h2>
+      <p class="mt-5 text-bone/65 text-lg leading-[1.7] max-w-[60ch]">
+        Patients are asking ChatGPT and Gemini for treatment recommendations. If your practice isn't referenced in those answers, you're invisible — no matter what your "ranking report" says.
+      </p>
+    </div>
+
+    <div class="mt-16 grid md:grid-cols-3 gap-5">
+      <article class="surface-2 lift-card rounded-2xl p-7 group">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[11px] tracking-[0.18em] text-bone/40">PAIN 01</span>
+          <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center">
+            <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <h3 class="mt-6 text-bone text-xl font-display font-bold tracking-tight">Invisible in AI answers</h3>
+        <p class="mt-3 text-bone/60 leading-[1.65] text-[15px]">
+          Patients hear about ChatGPT recommending dentists — but your practice never appears in those answers.
+        </p>
+      </article>
+
+      <article class="surface-2 lift-card rounded-2xl p-7 group">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[11px] tracking-[0.18em] text-bone/40">PAIN 02</span>
+          <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center">
+            <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8M21 7v6h-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <h3 class="mt-6 text-bone text-xl font-display font-bold tracking-tight">Rising paid ad costs</h3>
+        <p class="mt-3 text-bone/60 leading-[1.65] text-[15px]">
+          PPC keeps eating margin on implants and Invisalign. Costs go up, case volume doesn't.
+        </p>
+      </article>
+
+      <article class="surface-2 lift-card rounded-2xl p-7 group">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[11px] tracking-[0.18em] text-bone/40">PAIN 03</span>
+          <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center">
+            <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M4.93 19h14.14a2 2 0 001.74-3l-7.07-12a2 2 0 00-3.48 0l-7.07 12a2 2 0 001.74 3z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <h3 class="mt-6 text-bone text-xl font-display font-bold tracking-tight">Opaque retainers</h3>
+        <p class="mt-3 text-bone/60 leading-[1.65] text-[15px]">
+          You pay an SEO agency every month but can't tell what they did — or how it links to a single new patient.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== COMPARISON ============== -->
+<section id="comparison" class="relative py-24 lg:py-28 overflow-hidden">
+  <div class="absolute inset-0 grid-bg opacity-40"></div>
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl">
+      <p class="eyebrow">Two ways to spend a marketing budget</p>
+      <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+        The agency you have.<br/>
+        <span class="text-cyan">The system you need.</span>
+      </h2>
+    </div>
+
+    <div class="mt-14 grid lg:grid-cols-2 gap-5">
+      <!-- Generic agency -->
+      <article class="relative rounded-2xl p-8 lg:p-9 border border-white/5 bg-white/[0.015]">
+        <div class="flex items-center justify-between pb-5 border-b border-white/5">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-bone/40 uppercase">Generic dental agency</p>
+          <span class="font-mono text-[11px] text-bone/30 uppercase tracking-wider">Status quo</span>
+        </div>
+        <ul class="mt-6 space-y-4">
+          <li class="flex items-start gap-3 text-bone/55">
+            <span class="mt-2 w-1 h-1 rounded-full bg-bone/30 shrink-0"></span>
+            <p class="text-[15px] leading-[1.55]"><span class="line-through decoration-bone/30">"Aesthetic" Instagram feeds</span> and trending sound reels</p>
+          </li>
+          <li class="flex items-start gap-3 text-bone/55">
+            <span class="mt-2 w-1 h-1 rounded-full bg-bone/30 shrink-0"></span>
+            <p class="text-[15px] leading-[1.55]">Generic "dentist near me" keyword reports</p>
+          </li>
+          <li class="flex items-start gap-3 text-bone/55">
+            <span class="mt-2 w-1 h-1 rounded-full bg-bone/30 shrink-0"></span>
+            <p class="text-[15px] leading-[1.55]">Monthly retainer · no visible execution</p>
+          </li>
+          <li class="flex items-start gap-3 text-bone/55">
+            <span class="mt-2 w-1 h-1 rounded-full bg-bone/30 shrink-0"></span>
+            <p class="text-[15px] leading-[1.55]">Vanity metrics: impressions, followers, "ranking"</p>
+          </li>
+          <li class="flex items-start gap-3 text-bone/55">
+            <span class="mt-2 w-1 h-1 rounded-full bg-bone/30 shrink-0"></span>
+            <p class="text-[15px] leading-[1.55]">Zero presence in ChatGPT, Gemini, Perplexity</p>
+          </li>
+        </ul>
+      </article>
+
+      <!-- TDS -->
+      <article class="relative rounded-2xl p-8 lg:p-9 surface-2 lift overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-cyan/8 blur-3xl rounded-full"></div>
+        <div class="relative flex items-center justify-between pb-5 border-b border-cyan/15">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">The Digital Smile</p>
+          <span class="font-mono text-[11px] text-cyan uppercase tracking-wider flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan shadow-[0_0_8px_rgba(34,211,238,0.6)]"></span>
+            AI‑native
+          </span>
+        </div>
+        <ul class="relative mt-6 space-y-4">
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p class="text-[15px] leading-[1.55] text-bone/90">Treatment‑level AI visibility, treatment by treatment</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p class="text-[15px] leading-[1.55] text-bone/90">LLM‑legible authority signals (schema, sources, proof)</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p class="text-[15px] leading-[1.55] text-bone/90">Transparent monthly execution log — what shipped, why</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p class="text-[15px] leading-[1.55] text-bone/90">Production reporting: inquiries · consults · accepted cases</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="mt-1 w-4 h-4 text-cyan shrink-0" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p class="text-[15px] leading-[1.55] text-bone/90">Default citation in AI answers across your market</p>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== SOLUTION ============== -->
+<section id="solution" class="relative py-24 lg:py-32 overflow-hidden">
+  <div class="absolute inset-0 grid-bg opacity-60"></div>
+  <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan/5 blur-3xl rounded-full"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+      <div class="lg:col-span-5">
+        <p class="eyebrow">02 / The system</p>
+        <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+          An AI‑first<br/>acquisition engine.
+        </h2>
+        <p class="mt-5 text-bone/65 text-lg leading-[1.7]">
+          We rebuild your visibility around how AI search actually works — and connect every signal to a measurable outcome: a booked, high‑value case.
+        </p>
+
+        <ul class="mt-10 space-y-5">
+          <li class="flex gap-4">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan shrink-0 shadow-[0_0_10px_2px_rgba(34,211,238,0.5)]"></span>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight">Treatment‑level entity coverage</p>
+              <p class="text-bone/55 text-[15px] mt-1 leading-[1.6]">Implants. Invisalign. Veneers. Each one indexed and answered.</p>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan shrink-0 shadow-[0_0_10px_2px_rgba(34,211,238,0.5)]"></span>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight">LLM‑legible authority signals</p>
+              <p class="text-bone/55 text-[15px] mt-1 leading-[1.6]">Schema, sourcing, and structured proof the models can quote.</p>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan shrink-0 shadow-[0_0_10px_2px_rgba(34,211,238,0.5)]"></span>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight">Operator reporting</p>
+              <p class="text-bone/55 text-[15px] mt-1 leading-[1.6]">AI visibility → inquiries → accepted cases. End to end.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- System diagram -->
+      <div class="lg:col-span-7">
+        <div class="surface-2 lift rounded-2xl p-6 lg:p-10">
+          <div class="flex items-center justify-between mb-8">
+            <p class="font-mono text-[11px] tracking-[0.22em] text-bone/40 uppercase">AI SEO Engine · Flow</p>
+            <span class="font-mono text-[11px] text-cyan">live</span>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Node 1 -->
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 border border-cyan/30 flex items-center justify-center font-mono text-cyan text-[12px]">01</div>
+              <div class="flex-1 p-4 rounded-xl bg-white/[0.025] border border-white/5">
+                <p class="text-bone text-[15px] font-medium">AI query landscape</p>
+                <p class="text-bone/50 text-[13px] mt-0.5">Map every treatment question patients ask AI in your market.</p>
+              </div>
+            </div>
+            <div class="ml-5 w-px h-5 node-line"></div>
+            <!-- Node 2 -->
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 border border-cyan/30 flex items-center justify-center font-mono text-cyan text-[12px]">02</div>
+              <div class="flex-1 p-4 rounded-xl bg-white/[0.025] border border-white/5">
+                <p class="text-bone text-[15px] font-medium">Entity & authority build</p>
+                <p class="text-bone/50 text-[13px] mt-0.5">Structure content, sources, and proof so LLMs cite you confidently.</p>
+              </div>
+            </div>
+            <div class="ml-5 w-px h-5 node-line"></div>
+            <!-- Node 3 -->
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 border border-cyan/30 flex items-center justify-center font-mono text-cyan text-[12px]">03</div>
+              <div class="flex-1 p-4 rounded-xl bg-white/[0.025] border border-white/5">
+                <p class="text-bone text-[15px] font-medium">Conversion linkage</p>
+                <p class="text-bone/50 text-[13px] mt-0.5">Tie AI visibility to inquiries, consultations, and accepted treatment.</p>
+              </div>
+            </div>
+            <div class="ml-5 w-px h-5 node-line"></div>
+            <!-- Node 4 -->
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan border border-cyan flex items-center justify-center font-mono text-charcoal font-bold text-[12px]">04</div>
+              <div class="flex-1 p-4 rounded-xl bg-cyan/[0.08] border border-cyan/30">
+                <p class="text-bone text-[15px] font-medium">Booked high‑value cases</p>
+                <p class="text-cyan/80 text-[13px] mt-0.5">Production growth — reported monthly, in cases not clicks.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== PROOF ============== -->
+<section id="proof" class="relative py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl">
+      <p class="eyebrow">03 / The numbers</p>
+      <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+        Cases. Production.<br/>
+        <span class="text-bone/40">Not impressions.</span>
+      </h2>
+    </div>
+
+    <div class="mt-14 grid lg:grid-cols-12 gap-5">
+      <!-- Big stat -->
+      <div class="lg:col-span-7 surface-2 lift rounded-2xl p-8 lg:p-10 relative overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-80 h-80 bg-cyan/10 blur-3xl rounded-full"></div>
+        <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Case study · 90‑day window</p>
+        <p class="stat-num mt-6 text-bone text-[88px] lg:text-[120px] leading-none">
+          <span class="text-cyan">10</span><span class="text-bone/30 text-[60px] lg:text-[80px]">/mo</span>
+        </p>
+        <p class="mt-3 text-bone/70 text-lg max-w-md leading-[1.55]">
+          Additional implant cases per month for a single‑location practice — without raising Google Ads spend.
+        </p>
+        <div class="mt-8 flex items-center gap-6 pt-6 border-t border-white/5">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-wider text-bone/40">Before</p>
+            <p class="text-bone font-display font-bold text-2xl mt-1">~3<span class="text-bone/30 text-base font-normal">/mo</span></p>
+          </div>
+          <div class="w-px h-10 bg-white/10"></div>
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-wider text-cyan">After</p>
+            <p class="text-bone font-display font-bold text-2xl mt-1">13<span class="text-bone/30 text-base font-normal">/mo</span></p>
+          </div>
+          <div class="w-px h-10 bg-white/10"></div>
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-wider text-bone/40">Ad spend Δ</p>
+            <p class="text-bone font-display font-bold text-2xl mt-1">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side stats -->
+      <div class="lg:col-span-5 space-y-5">
+        <div class="surface-2 lift-card rounded-2xl p-7">
+          <p class="font-mono text-[11px] tracking-[0.18em] text-bone/40 uppercase">AI mentions</p>
+          <p class="stat-num text-bone mt-4 text-[56px] leading-none">
+            <span class="text-cyan">+312<span class="text-3xl">%</span></span>
+          </p>
+          <p class="text-bone/55 text-[14px] mt-3">Citations in ChatGPT, Gemini & Perplexity across treatment queries — 6‑month rolling.</p>
+        </div>
+
+        <div class="surface-2 lift-card rounded-2xl p-7">
+          <p class="font-mono text-[11px] tracking-[0.18em] text-bone/40 uppercase">Cost per accepted case</p>
+          <p class="stat-num text-bone mt-4 text-[56px] leading-none">
+            <span class="text-cyan">−47<span class="text-3xl">%</span></span>
+          </p>
+          <p class="text-bone/55 text-[14px] mt-3">Across implants & Invisalign vs. paid‑only acquisition baseline.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote -->
+    <figure class="mt-16 max-w-4xl">
+      <svg class="w-10 h-10 text-cyan/40 mb-6" viewBox="0 0 24 24" fill="currentColor"><path d="M9.13 9.07c-2 0-3.62 1.62-3.62 3.62 0 2 1.62 3.62 3.62 3.62s3.62-1.62 3.62-3.62V5h-3v4.07h-.62zm10 0c-2 0-3.62 1.62-3.62 3.62 0 2 1.62 3.62 3.62 3.62s3.62-1.62 3.62-3.62V5h-3v4.07h-.62z"/></svg>
+      <blockquote class="heading-2 text-bone text-[26px] lg:text-[34px] leading-[1.25]">
+        "We stopped getting 'rankings reports' and started getting <span class="text-cyan">case counts</span>. That alone changed how we think about marketing spend."
+      </blockquote>
+      <figcaption class="mt-7 flex items-center gap-4">
+        <img src="https://placehold.co/56x56/0E7490/F9FAFB?text=DR" alt="" class="w-12 h-12 rounded-full object-cover ring-1 ring-white/10" />
+        <div>
+          <p class="text-bone text-[15px] font-medium">Dr. M. Reyes, DDS</p>
+          <p class="text-bone/45 text-[13px] font-mono">Practice owner · Texas</p>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== PROCESS ============== -->
+<section id="process" class="relative py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl">
+      <p class="eyebrow">04 / Engagement</p>
+      <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[48px]">
+        A clear, monthly system —<br/>not a black box.
+      </h2>
+    </div>
+
+    <div class="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <article class="surface-2 lift-card rounded-2xl p-7 relative">
+        <span class="font-mono text-[64px] font-bold text-cyan/15 leading-none absolute top-5 right-6">01</span>
+        <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Week 1–2</p>
+        <h3 class="mt-5 text-bone text-xl font-display font-bold tracking-tight">AI visibility audit</h3>
+        <p class="mt-3 text-bone/55 text-[14px] leading-[1.65]">Treatment‑level baseline across ChatGPT, Gemini, Perplexity and AI Overviews.</p>
+      </article>
+      <article class="surface-2 lift-card rounded-2xl p-7 relative">
+        <span class="font-mono text-[64px] font-bold text-cyan/15 leading-none absolute top-5 right-6">02</span>
+        <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Month 1</p>
+        <h3 class="mt-5 text-bone text-xl font-display font-bold tracking-tight">System build</h3>
+        <p class="mt-3 text-bone/55 text-[14px] leading-[1.65]">Entity coverage, schema, sourcing, and content scaffolding the models will cite.</p>
+      </article>
+      <article class="surface-2 lift-card rounded-2xl p-7 relative">
+        <span class="font-mono text-[64px] font-bold text-cyan/15 leading-none absolute top-5 right-6">03</span>
+        <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Month 2–3</p>
+        <h3 class="mt-5 text-bone text-xl font-display font-bold tracking-tight">Conversion linkage</h3>
+        <p class="mt-3 text-bone/55 text-[14px] leading-[1.65]">Tie inquiries to AI sources, refine intake, and instrument case‑acceptance reporting.</p>
+      </article>
+      <article class="surface-2 lift-card rounded-2xl p-7 relative">
+        <span class="font-mono text-[64px] font-bold text-cyan/15 leading-none absolute top-5 right-6">04</span>
+        <p class="font-mono text-[11px] tracking-[0.18em] text-cyan uppercase">Ongoing</p>
+        <h3 class="mt-5 text-bone text-xl font-display font-bold tracking-tight">Operator reporting</h3>
+        <p class="mt-3 text-bone/55 text-[14px] leading-[1.65]">Monthly review: visibility, inquiries, consults, accepted treatment, production.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+    <!-- Monthly deliverables -->
+    <div id="deliverables" class="mt-20 surface-2 lift rounded-2xl p-8 lg:p-10 relative overflow-hidden">
+      <div class="absolute -top-32 -left-32 w-96 h-96 bg-cyan/5 blur-3xl rounded-full"></div>
+
+      <div class="relative grid lg:grid-cols-12 gap-10 items-start">
+        <div class="lg:col-span-4">
+          <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">Transparency · Monthly</p>
+          <h3 class="heading-2 mt-4 text-bone text-[28px] lg:text-[34px]">
+            What ships, every<br/>single month.
+          </h3>
+          <p class="mt-4 text-bone/55 text-[15px] leading-[1.7]">
+            No black box. Every deliverable, every change, every metric — itemized in your monthly operator log.
+          </p>
+        </div>
+
+        <div class="lg:col-span-8 grid sm:grid-cols-2 gap-4">
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/5">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">AI visibility scan</p>
+              <p class="text-bone/50 text-[13px] mt-1 leading-[1.55]">Treatment‑level checks across ChatGPT, Gemini, Perplexity, AI Overviews.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/5">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">Authority content</p>
+              <p class="text-bone/50 text-[13px] mt-1 leading-[1.55]">2–4 LLM‑optimized treatment pages or knowledge assets shipped.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/5">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M7 7h.01M7 12h.01M7 17h.01M12 7h5M12 12h5M12 17h5M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">Schema & entity build</p>
+              <p class="text-bone/50 text-[13px] mt-1 leading-[1.55]">Structured proof, sourcing, and entity graph updates the LLMs consume.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/5">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 14l4-4 4 4 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">Conversion instrumentation</p>
+              <p class="text-bone/50 text-[13px] mt-1 leading-[1.55]">Inquiry routing, intake QA, and source‑attribution review.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/5">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 border border-cyan/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">Competitive AI audit</p>
+              <p class="text-bone/50 text-[13px] mt-1 leading-[1.55]">Who else is being cited in your market — and where you can take share.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-cyan/[0.06] border border-cyan/20">
+            <div class="w-9 h-9 rounded-lg bg-cyan/20 border border-cyan/40 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="none"><path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-7 4h10a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2-3H8L6 7H3a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-bone font-display font-bold tracking-tight text-[15px]">Operator report</p>
+              <p class="text-cyan/80 text-[13px] mt-1 leading-[1.55]">Inquiries → consults → accepted cases → production. End‑to‑end.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== FAQ ============== -->
+<section id="faq" class="relative py-24 lg:py-32">
+  <div class="max-w-5xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12">
+      <div class="lg:col-span-4">
+        <p class="eyebrow">05 / Objections</p>
+        <h2 class="heading-2 mt-4 text-bone text-[34px] lg:text-[44px]">
+          Honest answers,<br/>up front.
+        </h2>
+      </div>
+
+      <div class="lg:col-span-8 space-y-3">
+        <details class="surface-2 rounded-xl px-6 py-5 group">
+          <summary class="flex items-center justify-between gap-6">
+            <span class="text-bone font-display font-bold tracking-tight text-lg">Isn't "AI SEO" just rebranded SEO?</span>
+            <span class="chev w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-cyan shrink-0">
+              <svg class="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <p class="mt-4 text-bone/65 text-[15px] leading-[1.7]">
+            No. Traditional SEO optimizes pages for blue‑link rankings. AI SEO optimizes for being cited inside generated answers — different signals, different infrastructure, and different metrics. We do both, but the engine is built for the AI layer first.
+          </p>
+        </details>
+
+        <details class="surface-2 rounded-xl px-6 py-5 group">
+          <summary class="flex items-center justify-between gap-6">
+            <span class="text-bone font-display font-bold tracking-tight text-lg">We've been burned by agencies before.</span>
+            <span class="chev w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-cyan shrink-0">
+              <svg class="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <p class="mt-4 text-bone/65 text-[15px] leading-[1.7]">
+            Fair. Our reporting is built around the things you actually care about: inquiries, consultations booked, treatment accepted, and production. If those numbers don't move, we don't have a job.
+          </p>
+        </details>
+
+        <details class="surface-2 rounded-xl px-6 py-5 group">
+          <summary class="flex items-center justify-between gap-6">
+            <span class="text-bone font-display font-bold tracking-tight text-lg">What if AI search changes again?</span>
+            <span class="chev w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-cyan shrink-0">
+              <svg class="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <p class="mt-4 text-bone/65 text-[15px] leading-[1.7]">
+            It will. We build around the structural fundamentals — entity authority, structured sourcing, treatment coverage — that all major LLMs rely on. The surface UI changes; the underlying signals don't.
+          </p>
+        </details>
+
+        <details class="surface-2 rounded-xl px-6 py-5 group">
+          <summary class="flex items-center justify-between gap-6">
+            <span class="text-bone font-display font-bold tracking-tight text-lg">Will our team need to do more work?</span>
+            <span class="chev w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-cyan shrink-0">
+              <svg class="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <p class="mt-4 text-bone/65 text-[15px] leading-[1.7]">
+            Minimal. We need a short monthly review with the practice lead, a few case anonymized photos, and your front‑desk intake data. Everything else — strategy, content, structure, reporting — is on us.
+          </p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== OPERATOR POV ============== -->
+<section id="founder" class="relative py-24 lg:py-28">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <div class="lg:col-span-5">
+        <div class="relative">
+          <div class="absolute -inset-2 bg-cyan/8 blur-2xl rounded-2xl"></div>
+          <div class="relative rounded-2xl overflow-hidden surface-2 lift aspect-[4/5]">
+            <img
+              src="https://placehold.co/480x600/0F172A/22D3EE?font=playfair&text=Founder+Portrait"
+              alt="Founder portrait placeholder"
+              class="w-full h-full object-cover mix-blend-luminosity opacity-90"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent"></div>
+            <div class="absolute bottom-5 left-5 right-5">
+              <p class="font-mono text-[11px] tracking-[0.22em] text-cyan uppercase">Founder</p>
+              <p class="text-bone font-display font-bold tracking-tight text-xl mt-2">The Digital Smile</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7">
+        <p class="eyebrow">Why this exists</p>
+        <h2 class="heading-2 mt-4 text-bone text-[30px] lg:text-[40px]">
+          We treat your practice<br/>like an <span class="text-cyan">operating system</span> — not a logo to redesign.
+        </h2>
+        <p class="mt-6 text-bone/65 text-[16px] lg:text-[17px] leading-[1.7]">
+          Most dental marketing is built around content cadence and clicks. We're built around the question your patients are actually asking AI right now — and whether your practice is the answer.
+        </p>
+        <p class="mt-4 text-bone/65 text-[16px] lg:text-[17px] leading-[1.7]">
+          If you measure success in cases, production, and chair time, we'll speak the same language. If you don't yet, we'll help you build the dashboards.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <span class="px-3 py-1.5 rounded-full surface-2 font-mono text-[11px] tracking-[0.18em] text-bone/70 uppercase">Operator‑minded</span>
+          <span class="px-3 py-1.5 rounded-full surface-2 font-mono text-[11px] tracking-[0.18em] text-bone/70 uppercase">AI‑native</span>
+          <span class="px-3 py-1.5 rounded-full surface-2 font-mono text-[11px] tracking-[0.18em] text-bone/70 uppercase">Evidence‑driven</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- ============== FINAL CTA ============== -->
+<section id="audit" class="relative py-24 lg:py-36 overflow-hidden">
+  <div class="absolute inset-0 hero-glow"></div>
+  <div class="absolute inset-0 grid-bg-strong opacity-50"></div>
+
+  <div class="relative max-w-5xl mx-auto px-6 lg:px-10 text-center">
+    <p class="eyebrow">Book your audit</p>
+    <h2 class="h-display mt-5 text-bone text-[44px] sm:text-[60px] lg:text-[80px]">
+      Find out if a patient<br/>
+      can <span class="text-cyan">find you in AI.</span>
+    </h2>
+    <p class="mt-7 text-bone/65 text-lg lg:text-xl max-w-2xl mx-auto leading-[1.6]">
+      We run a free, 14‑day AI visibility audit for serious practices. You see every gap, every opportunity, and every treatment query you're missing in your market.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="#" class="btn-primary px-7 py-4 rounded-xl text-[15px] inline-flex items-center justify-center gap-2">
+        Book AI visibility audit
+        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="mailto:hello@thedigitalsmile.com" class="btn-ghost px-7 py-4 rounded-xl text-[15px] inline-flex items-center justify-center">
+        Email the team
+      </a>
+    </div>
+    <p class="mt-8 font-mono text-[11px] tracking-[0.18em] uppercase text-bone/35">
+      No retainers · No long contracts · No fluff
+    </p>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="relative border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-12">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <div class="flex items-center gap-3">
+        <img src="Brand Assets/Logo 180px.png" alt="The Digital Smile" class="logo-mark w-7 h-7 rounded-lg" />
+        <div>
+          <p class="font-display font-bold tracking-tight text-bone text-[14px]">The Digital Smile</p>
+          <p class="font-mono text-[11px] text-bone/40 tracking-wider mt-0.5">AI SEO for serious dentists</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-2 text-[13px] text-bone/55">
+        <a href="#solution" class="hover:text-cyan transition-colors">Solution</a>
+        <a href="#proof" class="hover:text-cyan transition-colors">Proof</a>
+        <a href="#process" class="hover:text-cyan transition-colors">Process</a>
+        <a href="#faq" class="hover:text-cyan transition-colors">FAQ</a>
+        <a href="mailto:hello@thedigitalsmile.com" class="hover:text-cyan transition-colors">Contact</a>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <p class="font-mono text-[11px] text-bone/35 tracking-wider">© 2026 The Digital Smile · All rights reserved</p>
+      <p class="font-mono text-[11px] text-bone/35 tracking-wider">Built for dentists who measure success in cases, not clicks.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============== INTERACTIVE 3D MOLAR (Three.js) ============== -->
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const canvas = document.getElementById('tooth-canvas');
+  if (canvas) {
+    const wrap = canvas.parentElement;
+    const loader = wrap.querySelector('.scene-loader');
+
+    const scene = new THREE.Scene();
+    scene.background = null;
+
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0.5, 5.5);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    function resize() {
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ---- Lighting ----
+    scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    keyLight.position.set(3, 4, 5);
+    scene.add(keyLight);
+
+    // Cyan rim light — brand accent
+    const rimLight = new THREE.DirectionalLight(0x22D3EE, 2.2);
+    rimLight.position.set(-3, 1.5, -3);
+    scene.add(rimLight);
+
+    // Teal fill light underneath
+    const fillLight = new THREE.PointLight(0x0E7490, 1.6, 12);
+    fillLight.position.set(0, -3, 2);
+    scene.add(fillLight);
+
+    // ---- Build the molar via lathe + cusps ----
+    const toothGroup = new THREE.Group();
+    scene.add(toothGroup);
+
+    // 1. Crown + neck + root via LatheGeometry profile (revolved around Y axis)
+    //    Profile points trace the silhouette from top of crown down to root tip.
+    const profile = [
+      new THREE.Vector2(0.05, 1.05),  // top center
+      new THREE.Vector2(0.65, 1.00),  // crown shoulder
+      new THREE.Vector2(0.85, 0.75),  // crown bulge
+      new THREE.Vector2(0.80, 0.40),  // crown base
+      new THREE.Vector2(0.55, 0.10),  // gumline / neck
+      new THREE.Vector2(0.45, -0.10), // upper root
+      new THREE.Vector2(0.42, -0.40),
+      new THREE.Vector2(0.32, -0.80),
+      new THREE.Vector2(0.18, -1.15),
+      new THREE.Vector2(0.04, -1.35), // root tip
+    ];
+    const latheGeo = new THREE.LatheGeometry(profile, 64);
+    latheGeo.computeVertexNormals();
+
+    const enamelMat = new THREE.MeshStandardMaterial({
+      color: 0xF9FAFB,
+      roughness: 0.22,
+      metalness: 0.08,
+      envMapIntensity: 1.0,
+    });
+    const toothBody = new THREE.Mesh(latheGeo, enamelMat);
+    toothGroup.add(toothBody);
+
+    // 2. Cusps — small spheres on top of the crown for "molar" look
+    const cuspGeo = new THREE.SphereGeometry(0.32, 32, 24);
+    const cuspPositions = [
+      [ 0.42, 1.02,  0.30],
+      [-0.42, 1.02,  0.30],
+      [ 0.42, 1.02, -0.30],
+      [-0.42, 1.02, -0.30],
+    ];
+    cuspPositions.forEach(([x, y, z]) => {
+      const c = new THREE.Mesh(cuspGeo, enamelMat);
+      c.position.set(x, y, z);
+      c.scale.set(1, 0.55, 1);
+      toothGroup.add(c);
+    });
+
+    // 3. Cyan accent ring at the gumline — brand signal
+    const ringGeo = new THREE.TorusGeometry(0.56, 0.018, 24, 96);
+    const ringMat = new THREE.MeshStandardMaterial({
+      color: 0x22D3EE,
+      emissive: 0x22D3EE,
+      emissiveIntensity: 1.6,
+      roughness: 0.25,
+      metalness: 0.4,
+    });
+    const accentRing = new THREE.Mesh(ringGeo, ringMat);
+    accentRing.position.y = 0.08;
+    accentRing.rotation.x = Math.PI / 2;
+    toothGroup.add(accentRing);
+
+    // 4. Subtle wireframe overlay on the tooth body — editorial AI feel
+    const wireMat = new THREE.LineBasicMaterial({
+      color: 0x22D3EE,
+      transparent: true,
+      opacity: 0.10,
+    });
+    const wireGeo = new THREE.WireframeGeometry(latheGeo);
+    const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+    toothGroup.add(wireframe);
+
+    // 5. Orbital data nodes — small floating spheres around the tooth (AI/data motif)
+    const nodeGeo = new THREE.SphereGeometry(0.04, 16, 16);
+    const nodeMat = new THREE.MeshBasicMaterial({ color: 0x22D3EE });
+    const nodes = [];
+    for (let i = 0; i < 6; i++) {
+      const node = new THREE.Mesh(nodeGeo, nodeMat);
+      const angle = (i / 6) * Math.PI * 2;
+      const radius = 1.6;
+      node.userData = {
+        baseAngle: angle,
+        radius,
+        ySpeed: 0.4 + Math.random() * 0.5,
+        yOffset: (Math.random() - 0.5) * 1.6,
+        speed: 0.25 + Math.random() * 0.2,
+      };
+      scene.add(node);
+      nodes.push(node);
+    }
+
+    // Position the tooth group so the camera frames it well
+    toothGroup.position.y = -0.05;
+
+    // ---- OrbitControls (drag to rotate) ----
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.minPolarAngle = Math.PI * 0.20;
+    controls.maxPolarAngle = Math.PI * 0.78;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.7;
+
+    // Pause auto-rotate while user interacts
+    let interacting = false;
+    canvas.addEventListener('pointerdown', () => { interacting = true; controls.autoRotate = false; });
+    window.addEventListener('pointerup', () => {
+      if (interacting) {
+        interacting = false;
+        // resume auto-rotate after a short pause
+        setTimeout(() => { controls.autoRotate = true; }, 1500);
+      }
+    });
+
+    // ---- Animation loop ----
+    const clock = new THREE.Clock();
+    function tick() {
+      const t = clock.getElapsedTime();
+      // Animate orbital nodes
+      nodes.forEach((n, i) => {
+        const d = n.userData;
+        const a = d.baseAngle + t * d.speed;
+        n.position.x = Math.cos(a) * d.radius;
+        n.position.z = Math.sin(a) * d.radius;
+        n.position.y = Math.sin(t * d.ySpeed + d.yOffset) * 0.6;
+      });
+      // Pulse the accent ring intensity subtly
+      ringMat.emissiveIntensity = 1.4 + Math.sin(t * 1.4) * 0.4;
+
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+
+    // Hide loader once first frame is rendered
+    requestAnimationFrame(() => {
+      tick();
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 600);
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

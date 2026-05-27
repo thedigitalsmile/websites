@@ -1,0 +1,14 @@
+{
+  "name": "the-digital-smile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node serve.mjs",
+    "shot": "node screenshot.mjs http://localhost:3000",
+    "shot:mobile": "node screenshot.mjs http://localhost:3000 mobile mobile"
+  },
+  "dependencies": {
+    "puppeteer": "^23.11.1"
+  }
+}
